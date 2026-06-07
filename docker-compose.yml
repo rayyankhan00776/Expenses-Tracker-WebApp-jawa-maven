@@ -1,8 +1,6 @@
-version: '3.8'
-
 services:
   java_app:
-    build: 
+    build:
       context: .
     container_name: "expenses-app"
     networks:
@@ -36,7 +34,7 @@ services:
     ports:
       - "3307:3306"
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost" , "-uroot" , "-pTest@123"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pTest@123"]
       interval: 10s
       timeout: 5s
       retries: 5

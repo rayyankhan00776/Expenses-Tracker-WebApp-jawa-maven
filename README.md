@@ -28,18 +28,37 @@ The Expenses Tracker App is a robust financial management solution developed usi
 1. **Clone the Repository:**
 `git clone https://github.com/your-username/expenses-tracker.git`
 
-2. **Configure Database:**
-Set up MySQL database and update the application.properties file with your database configuration.
+2. **Run with Docker Compose:**
+Install Docker Desktop, then start both the Spring Boot app and MySQL with:
+`docker compose up --build`
 
-3. **Build and Run:**
+3. **Open the App:**
+After the containers are healthy, open `http://localhost:8080` in your browser.
+
+4. **Configure Database for Local Runs:**
+If you want to run the app outside Docker, set up MySQL and update `src/main/resources/application.properties` with your database configuration.
+
+5. **Build and Run with Maven:**
 Build the project using your preferred IDE or with Maven:
 `mvn clean install`.
 
-4. **Run the application:**
+6. **Run the application manually:**
 `java -jar target/expenses-tracker.jar`.
 
-5. **Access the App:**
-Open your web browser and navigate to `http://localhost:8080`.
+## Docker Compose
+The repository includes [docker-compose.yml](docker-compose.yml) so the app and database can be started together without manual setup.
+
+Run:
+`docker compose up --build`
+
+Services exposed by default:
+- Application: `http://localhost:8080`
+- MySQL: `localhost:3307`
+
+Default database credentials used by the compose file:
+- Username: `root`
+- Password: `Test@123`
+- Database: `expenses_tracker`
 
 ## ScreenShots
 ![Example Image](screenshots/1.png) <br>

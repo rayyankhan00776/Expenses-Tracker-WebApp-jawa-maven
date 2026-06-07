@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-docker:
+    name: Build, test, and dockerize
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      mysql_db:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: Test@123
+          MYSQL_DATABASE: expenses_tracker
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -pTest@123"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+          --health-start-period=20s
+
+    env:
+      SPRING_DATASOURCE_URL: jdbc:mysql://127.0.0.1:3306/expenses_tracker?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Test@123
+      MAVEN_OPTS: -Xmx1024m
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: maven
+
+      - name: Build and test with Maven
+        run: mvn -B clean verify
+
+      - name: Build Docker image
+        run: docker build -t expenses-tracker-webapp:${{ github.sha }} .
